@@ -23,7 +23,6 @@ exports.signup = async (req, res) => {
 
     const payload = {
       user: {
-        id: user.id,
         email: user.email,
       },
     };
@@ -63,7 +62,6 @@ exports.signin = async (req, res) => {
 
     const payload = {
       user: {
-        id: user.id,
         email: user.email,
       },
     };
@@ -88,14 +86,39 @@ exports.signin = async (req, res) => {
   }
 };
 
-exports.protected = (req, res) => {
-  res.json({ msg: "This is a protected route" });
-};
-
 exports.googleSignIn = async (req, res) => {
   try {
+    const { name, email } = req.body;
     console.log(req.body);
-    res.status(200).json(req.body);
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        name,
+        email,
+      });
+      await user.save();
+    }
+
+    const payload = {
+      user: {
+        email: user.email,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" },
+      (err, token) => {
+        if (err) throw err;
+        res.cookie("token", token, {
+          httpOnly: true,
+          sameSite: "Lax",
+          secure: process.env.NODE_ENV === "production",
+        });
+        res.json({ token });
+      }
+    );
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server error");
