@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { signup, signin } = require("../controllers/authController");
+const {
+  signup,
+  signin,
+  googleSignIn,
+} = require("../controllers/authController");
 const { validationResult } = require("express-validator");
 
 router.post(
@@ -25,6 +29,14 @@ router.post(
     next();
   },
   signin
+);
+
+router.post(
+  "/google-signin",
+  (req, res, next) => {
+    next();
+  },
+  googleSignIn
 );
 
 module.exports = router;

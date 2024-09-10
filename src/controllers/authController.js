@@ -91,3 +91,13 @@ exports.signin = async (req, res) => {
 exports.protected = (req, res) => {
   res.json({ msg: "This is a protected route" });
 };
+
+exports.googleSignIn = async (req, res) => {
+  try {
+    console.log(req.body);
+    res.status(200).json(req.body);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Server error");
+  }
+};
