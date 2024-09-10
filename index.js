@@ -14,10 +14,19 @@ connectDB();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.DASHBOARD,
+    origin: [
+      "https://freecodecamp-amrit.netlify.app",
+      "https://freecodecamp-amrit.vercel.app",
+      "http://localhost:3000",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
+    optionsSuccessStatus: 204,
   })
 );
+
+app.options("*", cors());
 
 app.use(bodyParser.json());
 app.use(cookieParser());
