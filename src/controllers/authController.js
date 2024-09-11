@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Course = require("../models/course");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -89,7 +90,6 @@ exports.signin = async (req, res) => {
 exports.googleSignIn = async (req, res) => {
   try {
     const { name, email } = req.body;
-    console.log(req.body);
     let user = await User.findOne({ email });
     if (!user) {
       user = new User({
@@ -119,6 +119,16 @@ exports.googleSignIn = async (req, res) => {
         res.json({ token });
       }
     );
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.learn = async (req, res) => {
+  try {
+    let courses = await Course.find();
+    res.json({ courses });
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server error");

@@ -4,6 +4,7 @@ const {
   signup,
   signin,
   googleSignIn,
+  learn,
 } = require("../controllers/authController");
 const { validationResult } = require("express-validator");
 
@@ -41,6 +42,18 @@ router.post(
     next();
   },
   googleSignIn
+);
+
+router.get(
+  "/learn",
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+  learn
 );
 
 module.exports = router;
